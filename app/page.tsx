@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 
-const fetchFlagWord = async () => {
+const fetchFlagWord = async (): Promise<string> => {
   const link =
     "https://tns4lpgmziiypnxxzel5ss5nyu0nftol.lambda-url.us-east-1.on.aws/challenge";
 
@@ -36,6 +37,7 @@ export default function Home() {
   useEffect(() => {
     const fetchWord = async () => {
       const word = await fetchFlagWord();
+      setDisplayedText([""]);
       setFlagWord(word);
     };
     fetchWord();
@@ -45,14 +47,10 @@ export default function Home() {
   useEffect(() => {
     if (flagWord) {
       const timeoutId = setTimeout(() => {
-        if (renderIdx === flagWord.length) {
-          setRenderIdx(0);
-          setDisplayedText([flagWord[renderIdx]]);
-        } else {
+        if (renderIdx < flagWord.length) {
           setRenderIdx(renderIdx + 1);
           setDisplayedText([...displayedText, flagWord[renderIdx]]);
         }
-
       }, 500);
       return () => clearTimeout(timeoutId);
     }
@@ -67,6 +65,11 @@ export default function Home() {
           <p>Loading...</p>
         )}
       </main>
+      <footer>
+        <Link href="https://github.com/gijonc/nextjs-sandbox/blob/main/app/page.tsx#L5-L28">
+          <u>Script used to to get the URL</u>
+        </Link>
+      </footer>
     </div>
   );
 }
